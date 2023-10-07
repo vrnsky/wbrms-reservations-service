@@ -1,0 +1,22 @@
+name: Commit Stage
+on: push
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: 'maven'
+      - name: Build, unit tests and integration tests
+        run: |
+          mvn clean package
