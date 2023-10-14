@@ -1,10 +1,10 @@
-# fly.toml app configuration file generated for wbrms-reservations-service on 2023-10-14T14:25:52+08:00
+# fly.toml app configuration file generated for wbrms-reservations-service on 2023-10-14T16:10:17+08:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
 app = "wbrms-reservations-service"
-primary_region = "hkg"
+primary_region = "atl"
 
 [build]
 
