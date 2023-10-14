@@ -1,6 +1,11 @@
 name: Commit Stage
 on: push
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: vrnsky/wbrms-reservations-service
+  VERSION: latest
+
 jobs:
   build:
     name: Build and Test
@@ -20,12 +25,20 @@ jobs:
       - name: Build, unit tests and integration tests
         run: |
           mvn clean package
+      - name: Log into container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish docker image with release version to Github Docker Registry
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
   deploy:
     name: Deploy app
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --local-only
+      - run: fly launch --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
