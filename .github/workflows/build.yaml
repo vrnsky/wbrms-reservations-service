@@ -11,7 +11,8 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-20.04
     permissions:
-      contents: read
+      contents: write
+      packages: write
       security-events: write
     steps:
       - name: Checkout source code
