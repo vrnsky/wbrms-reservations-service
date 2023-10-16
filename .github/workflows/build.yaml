@@ -38,6 +38,7 @@ jobs:
       - name: Publish docker image with release version to Github Docker Registry
         run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
   deploy:
+    needs: [ build ]
     name: Deploy app
     runs-on: ubuntu-latest
     steps:
