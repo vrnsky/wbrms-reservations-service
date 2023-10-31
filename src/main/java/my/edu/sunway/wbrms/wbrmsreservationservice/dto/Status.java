@@ -1,4 +1,4 @@
-package my.edu.sunway.wbrms.wbrmsreservationservice.entity;
+package my.edu.sunway.wbrms.wbrmsreservationservice.dto;
 
 public enum Status {
     Created,

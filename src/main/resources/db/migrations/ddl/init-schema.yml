@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-reservations
+      author: Egor Voronianskii
+      changes:
+        - createTable:
+            tableName: reservations
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: pax
+                  type: INT
+              - column:
+                  name: phone
+                  type: VARCHAR(255)

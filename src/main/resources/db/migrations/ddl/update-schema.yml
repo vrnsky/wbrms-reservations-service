@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: update table reservations
+      author: Egor Voronianskii
+      changes:
+        - addColumn:
+            tableName: reservations
+            columns:
+              - column:
+                  name: CREATION_DATE_TIME
+                  type: TIMESTAMP WITHOUT TIMEZONE
+              - column:
+                  name: DESIRED_DATE_TIME
+                  type: TIMESTAMP WITHOUT TIMEZONE
+              - column:
+                  name: STATUS
+                  type: VARCHAR(255)

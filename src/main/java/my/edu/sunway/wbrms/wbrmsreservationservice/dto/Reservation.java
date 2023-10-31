@@ -1,6 +1,10 @@
-package my.edu.sunway.wbrms.wbrmsreservationservice.entity;
+package my.edu.sunway.wbrms.wbrmsreservationservice.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import my.edu.sunway.wbrms.wbrmsreservationservice.entity.ReservationEntity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -15,17 +19,21 @@ public record Reservation(
         @DateTimeFormat(pattern = "dd/MM/yyyy HH:ss")
         LocalDateTime creationTime,
         @Schema(description = "Name of person under reservation")
+        @NotBlank(message = "Message is required filed")
         String name,
 
         @Schema(description = "Desired date and time")
         @DateTimeFormat(pattern = "dd/MM/yyyy HH:ss")
+        @NotNull(message = "Desired time must be not null")
         LocalDateTime desiredTime,
 
         @Schema(description = "Number of pax")
+        @Min(value = 1, message = "At least one")
         int pax,
 
         @Schema(description = "Contact mobile phone")
-        String mobilePhone,
+        @NotBlank(message = "Contact phone must be not null")
+        String phone,
 
         @Schema(description = "Status of reservation")
         Status status
@@ -38,7 +46,7 @@ public record Reservation(
                 reservation.name,
                 reservation.desiredTime,
                 reservation.pax,
-                reservation.mobilePhone,
+                reservation.phone,
                 status
         );
     }
@@ -50,8 +58,20 @@ public record Reservation(
                 reservation.name,
                 reservation.desiredTime,
                 reservation.pax,
-                reservation.mobilePhone,
+                reservation.phone,
                 status
+        );
+    }
+
+    public static Reservation fromReservationEntity(ReservationEntity reservationEntity) {
+        return new Reservation(
+                reservationEntity.getId(),
+                null,
+                reservationEntity.getName(),
+                null,
+                reservationEntity.getPax(),
+                reservationEntity.getPhone(),
+                reservationEntity.getStatus()
         );
     }
 }
