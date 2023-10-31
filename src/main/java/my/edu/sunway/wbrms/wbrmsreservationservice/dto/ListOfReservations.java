@@ -2,7 +2,6 @@ package my.edu.sunway.wbrms.wbrmsreservationservice.dto;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import my.edu.sunway.wbrms.wbrmsreservationservice.entity.Reservation;
 
 import java.util.List;
 import java.util.Map;

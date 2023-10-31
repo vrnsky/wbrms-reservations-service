@@ -1,6 +1,12 @@
 spring:
   application:
     name: wbrms-reservation-service
+  liquibase:
+    change-log: classpath:db/changelog.yml
+  datasource:
+    url: jdbc:postgresql://${RESERVATION_DB_HOST}:${RESERVATION_DB_PORT}/${RESERVATION_DB_NAME}
+    username: ${RESERVATION_DB_USERNAME}
+    password: ${RESERVATION_DB_PASSWORD}
 management:
   endpoints:
     web:
