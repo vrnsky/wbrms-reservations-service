@@ -37,22 +37,3 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish docker image with release version to Github Docker Registry
         run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-  deploy:
-    needs: [ build ]
-    name: Deploy app
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          distribution: temurin
-          java-version: 17
-          cache: 'maven'
-      - name: Build, unit tests and integration tests
-        run: |
-          mvn clean package
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --local-only
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: wbrms-reservation-service
+    name: wbrms-reservations-service
   liquibase:
     change-log: classpath:db/changelog.yml
   datasource:
