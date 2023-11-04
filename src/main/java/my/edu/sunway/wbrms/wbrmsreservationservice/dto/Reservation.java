@@ -8,7 +8,9 @@ import my.edu.sunway.wbrms.wbrmsreservationservice.entity.ReservationEntity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public record Reservation(
 
@@ -66,12 +68,18 @@ public record Reservation(
     public static Reservation fromReservationEntity(ReservationEntity reservationEntity) {
         return new Reservation(
                 reservationEntity.getId(),
-                null,
+                reservationEntity.getCreationDateTime(),
                 reservationEntity.getName(),
-                null,
+                reservationEntity.getDesiredDateTime(),
                 reservationEntity.getPax(),
                 reservationEntity.getPhone(),
                 reservationEntity.getStatus()
         );
+    }
+
+    public static List<Reservation> fromReservationEntityList(List<ReservationEntity> reservationEntityList) {
+        return reservationEntityList.stream()
+                .map(Reservation::fromReservationEntity)
+                .collect(Collectors.toList());
     }
 }
