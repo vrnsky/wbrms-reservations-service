@@ -6,11 +6,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import my.edu.sunway.wbrms.wbrmsreservationservice.dto.Reservation;
+import my.edu.sunway.wbrms.wbrmsreservationservice.dto.SearchRequest;
 import my.edu.sunway.wbrms.wbrmsreservationservice.service.ReservationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,26 +24,31 @@ public class ReservationController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @Operation(summary = "Create a new reservation")
-    public Mono<Reservation> createReservation(
+    public Reservation createReservation(
             @Parameter(description = "Definition of reservation") @Valid @RequestBody Reservation reservation) {
-        return Mono.just(reservationService.create(reservation));
+        return reservationService.create(reservation);
     }
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update existing reservation")
-    public Mono<?> updateReservation(
+    public Reservation updateReservation(
             @Parameter(description = "ID of reservation") @PathVariable(name = "id") UUID id,
-            @Parameter(description = "Update reservation") @RequestBody Reservation reservation
+            @Parameter(description = "Update reservation") @Valid @RequestBody Reservation reservation
     ) {
-        return Mono.just(reservationService.update(id, reservation));
+        return reservationService.update(id, reservation);
     }
 
     @DeleteMapping("/cancel/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<?> cancelReservation(@PathVariable(name = "id") UUID id) {
+    public void cancelReservation(@PathVariable(name = "id") UUID id) {
         reservationService.cancelReservation(id);
-        return Mono.empty();
+    }
+
+    @PostMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Reservation> searchReservations(@Valid @RequestBody SearchRequest searchRequest) {
+        return reservationService.searchReservation(searchRequest);
     }
 
 
