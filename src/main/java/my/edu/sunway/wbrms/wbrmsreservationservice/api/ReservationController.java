@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -51,5 +52,13 @@ public class ReservationController {
         return reservationService.searchReservation(searchRequest);
     }
 
+    @GetMapping("/list")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, List<Reservation>> list(
+            @Parameter(description = "Number of page") @RequestParam int page,
+            @Parameter(description = "Number of elements per page") @RequestParam int size
+    ) {
+        return reservationService.list(page, size);
+    }
 
 }
