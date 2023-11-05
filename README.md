@@ -16,3 +16,6 @@ mvn clean package
 docker build wbrms-reservations-service:latest .
 ```
 
+#### Local development
+
+
