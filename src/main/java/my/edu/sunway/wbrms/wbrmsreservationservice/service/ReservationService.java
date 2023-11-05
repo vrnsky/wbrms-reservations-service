@@ -8,12 +8,13 @@ import my.edu.sunway.wbrms.wbrmsreservationservice.dto.Status;
 import my.edu.sunway.wbrms.wbrmsreservationservice.entity.ReservationEntity;
 import my.edu.sunway.wbrms.wbrmsreservationservice.exception.NotFoundReservation;
 import my.edu.sunway.wbrms.wbrmsreservationservice.repository.ReservationRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import static my.edu.sunway.wbrms.wbrmsreservationservice.entity.ReservationSpecification.*;
 
@@ -21,6 +22,8 @@ import static my.edu.sunway.wbrms.wbrmsreservationservice.entity.ReservationSpec
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
+
+    private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     private final ReservationRepository reservationRepository;
 
@@ -60,4 +63,31 @@ public class ReservationService {
     }
 
 
+    public Map<String, List<Reservation>> list(int page, int size) {
+        var pageRequest = PageRequest.of(page, size);
+        var pagedReservations = reservationRepository.findByDesiredDateTimeBeforeOrderByDesiredDateTimeDesc(
+                LocalDateTime.now().minusDays(7).toLocalDate().atStartOfDay(),
+                pageRequest
+        );
+
+        Map<String, List<Reservation>> listOfReservationsPerDate = new HashMap<>();
+
+        for (ReservationEntity reservation : pagedReservations.getContent()) {
+            var reservationDate = DTF.format(reservation.getDesiredDateTime());
+            listOfReservationsPerDate.computeIfAbsent(reservationDate, key -> new ArrayList<>())
+                    .add(Reservation.fromReservationEntity(reservation));
+        }
+
+        for (List<Reservation> reservations : listOfReservationsPerDate.values()) {
+            reservations.sort(new DateTimeComparator().reversed());
+        }
+        return listOfReservationsPerDate;
+    }
+
+    private static class DateTimeComparator implements Comparator<Reservation> {
+        @Override
+        public int compare(Reservation reservation1, Reservation reservation2) {
+            return reservation2.desiredTime().compareTo(reservation1.desiredTime());
+        }
+    }
 }

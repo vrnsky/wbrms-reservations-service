@@ -274,5 +274,62 @@ class ReservationControllerTest extends DatabaseIntegrationTest {
         }
     }
 
+    @Test
+    @Tag("positive")
+    @DisplayName("Test case: List method should return upcoming reservations")
+    void testThatListMethodReturnUpcomingReservations() throws Exception {
+        var now = LocalDateTime.now();
+        var reservation = new Reservation(
+                null,
+                now.minusHours(3),
+                "Ekaterina Voronianskaia",
+                now.minusHours(3),
+                5,
+                "013-387-xxxx",
+                null
+        );
+
+        mockMvc.perform(post("/create")
+                        .content(objectMapper.writeValueAsBytes(reservation))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isAccepted());
+
+        reservation = new Reservation(
+                null,
+                now.minusHours(1),
+                "Egor Voronianskii",
+                now.minusHours(1),
+                5,
+                "013-384-xxxx",
+                null
+        );
+
+        mockMvc.perform(post("/create")
+                        .content(objectMapper.writeValueAsBytes(reservation))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isAccepted());
+
+        reservation = new Reservation(
+                null,
+                now.minusHours(1),
+                "Egor Voronianskii",
+                now.minusDays(2),
+                5,
+                "013-384-xxxx",
+                null
+        );
+
+        mockMvc.perform(post("/create")
+                        .content(objectMapper.writeValueAsBytes(reservation))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isAccepted());
+
+        mockMvc.perform(get("/list")
+                .param("page", "0")
+                .param("size", "10"))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
 
 }
